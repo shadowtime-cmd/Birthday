@@ -1,0 +1,190 @@
+/* =========================================================
+   CINEMATIC BIRTHDAY - DESIGN ENGINE (styles.css)
+========================================================= */
+
+/* 1. Global Reset & Typography */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body, html {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    /* Deep cinematic radial gradient for a premium feel */
+    background: radial-gradient(circle at center, #1a1525 0%, #0a0812 100%);
+    color: #ffffff;
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+/* 2. Page Navigation System */
+.page {
+    display: none; /* Hidden by default, JavaScript will reveal them */
+    min-height: 100vh;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    text-align: center;
+    position: relative;
+    z-index: 10;
+}
+
+/* 3. Typography & Glassmorphism Text */
+h1 {
+    font-size: 3.5em;
+    margin-bottom: 15px;
+    background: linear-gradient(45deg, #ff9a9e, #fecfef, #a1c4fd);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 10px rgba(255, 154, 158, 0.3));
+}
+
+h2 {
+    font-size: 2.5em;
+    color: #fecfef;
+    margin-bottom: 20px;
+}
+
+p {
+    font-size: 1.2em;
+    color: #e0e0e0;
+    line-height: 1.6;
+    max-width: 600px;
+}
+
+/* 4. Premium Buttons */
+.btn {
+    background: linear-gradient(45deg, #ff4081, #ff79b0);
+    color: white;
+    border: none;
+    padding: 16px 36px;
+    font-size: 1.15em;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 8px 25px rgba(255, 64, 129, 0.4);
+    margin-top: 25px;
+    position: relative;
+    z-index: 50;
+}
+
+.btn:hover {
+    transform: scale(1.06) translateY(-3px);
+    box-shadow: 0 12px 30px rgba(255, 64, 129, 0.7);
+}
+
+/* 5. Interactive Gift Grid */
+.gift-grid {
+    display: flex;
+    gap: 25px;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 700px;
+    margin-top: 30px;
+}
+
+.gift-box {
+    font-size: 3.5em;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+}
+
+.gift-box:hover {
+    transform: scale(1.12) rotate(5deg);
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* 6. The 3D Table & Scene */
+.table-container {
+    position: relative;
+    width: 100%;
+    max-width: 650px;
+    height: 450px;
+    margin-top: 40px;
+}
+
+.table-surface {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    height: 140px;
+    /* Rich wood-like gradient for realism */
+    background: radial-gradient(ellipse at center, #3e2723 0%, #1b100c 100%);
+    border-radius: 50%;
+    box-shadow: 0 40px 60px rgba(0,0,0,0.95), inset 0 5px 15px rgba(255,255,255,0.05);
+    z-index: 2;
+}
+
+/* 7. Cake & Trembling Animation */
+.cake-wrapper {
+    position: absolute;
+    bottom: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 280px;
+    height: 320px;
+    z-index: 3;
+}
+
+.tremble {
+    /* The violent "Oggy" shake */
+    animation: violentShake 0.08s infinite !important;
+}
+
+@keyframes violentShake {
+    0% { transform: translateX(-50%) translate(5px, 4px) rotate(1deg); }
+    50% { transform: translateX(-50%) translate(-5px, -4px) rotate(-1deg); }
+    100% { transform: translateX(-50%) translate(3px, -2px) rotate(0deg); }
+}
+
+/* 8. Real-Life Kittens */
+#kitties {
+    position: absolute;
+    bottom: 80px;
+    left: 50%;
+    transform: translate(-50%, 150px); /* Hidden deep inside the cake base */
+    display: flex;
+    gap: 15px;
+    z-index: 4;
+    opacity: 0;
+    /* Smooth cinematic rise */
+    transition: transform 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.8s ease-in;
+}
+
+#kitties.rise-up {
+    transform: translate(-50%, 0);
+    opacity: 1;
+}
+
+.real-kitty {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 -10px 25px rgba(0,0,0,0.6);
+    border: 4px solid #ff80ab;
+}
+
+/* 9. Physics Canvas Layer */
+#physics-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 15;
+    pointer-events: none; /* Allows clicking buttons through the canvas */
+}
