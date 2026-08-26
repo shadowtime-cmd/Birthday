@@ -5,573 +5,377 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Happy Birthday!</title>
     <style>
-        /* ================= BASE STYLES ================= */
+        /* ================= BASE STYLES & ATMOSPHERE ================= */
         * { box-sizing: border-box; }
         body, html {
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: linear-gradient(135deg, #0f0c20 0%, #1a103c 50%, #2b0938 100%);
+            margin: 0; padding: 0;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: radial-gradient(circle at center, #1a1525 0%, #0a0812 100%);
             color: #ffffff;
             overflow-x: hidden;
             min-height: 100vh;
         }
 
-        /* Dynamic Particle Background */
-        #particle-container {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            pointer-events: none;
-            z-index: 0;
+        /* Ambient floating balloons */
+        #bg-decorations {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 0;
         }
-        .particle {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.7);
-            border-radius: 50%;
-            box-shadow: 0 0 12px rgba(255, 154, 238, 0.8);
-            animation: float 6s infinite ease-in-out alternate;
+        .balloon {
+            position: absolute; font-size: 3em;
+            animation: floatUp 7s infinite linear; opacity: 0.6;
         }
-        @keyframes float {
-            0% { transform: translateY(0px) translateX(0px); }
-            100% { transform: translateY(-25px) translateX(15px); }
+        @keyframes floatUp {
+            0% { transform: translateY(110vh) rotate(-10deg); }
+            100% { transform: translateY(-20vh) rotate(10deg); }
         }
 
-        /* Glassmorphism Cards */
-        .card {
-            background: rgba(255, 255, 255, 0.07);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            padding: 45px 35px;
-            border-radius: 24px;
-            max-width: 600px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), inset 0 0 20px rgba(255, 255, 255, 0.05);
-            text-align: center;
+        /* Happy Birthday Banner */
+        .banner {
+            position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+            display: flex; gap: 10px; z-index: 10;
         }
-        h1 {
-            font-size: 3.2em;
-            margin: 0 0 15px 0;
-            background: linear-gradient(45deg, #ff9a9e, #fecfef, #a1c4fd);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .flag {
+            width: 40px; height: 50px;
+            clip-path: polygon(0 0, 100% 0, 50% 100%);
+            background: #ff4081;
+            animation: swing 2s infinite ease-in-out alternate;
+            transform-origin: top center;
         }
-        h2 { font-size: 2.3em; color: #fecfef; margin-0 0 15px 0; }
-        p { font-size: 1.2em; line-height: 1.6; color: #e0e0e0; margin-bottom: 20px; }
+        .flag:nth-child(even) { background: #00e676; animation-delay: 0.5s; }
+        .flag:nth-child(3n) { background: #00b0ff; animation-delay: 1s; }
+        @keyframes swing {
+            0% { transform: rotate(-15deg); }
+            100% { transform: rotate(15deg); }
+        }
 
         /* Buttons */
         .btn {
             background: linear-gradient(45deg, #ff4081, #ff79b0);
-            color: white;
-            border: none;
-            padding: 16px 36px;
-            font-size: 1.15em;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 8px 25px rgba(255, 64, 129, 0.4);
-            margin: 10px 5px;
-            display: inline-block;
+            color: white; border: none; padding: 15px 30px; font-size: 1.1em;
+            border-radius: 50px; cursor: pointer; font-weight: bold;
+            box-shadow: 0 5px 15px rgba(255, 64, 129, 0.4);
+            position: relative; z-index: 20;
         }
-        .btn:hover {
-            transform: scale(1.06) translateY(-3px);
-            box-shadow: 0 12px 30px rgba(255, 64, 129, 0.7);
-        }
+        .btn:hover { transform: scale(1.05); }
 
-        /* ================= PAGE 1: GREETINGS ================= */
-        #main-page section {
-            position: relative;
-            z-index: 1;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        /* ================= PAGE 2: GIFTS ================= */
-        #gift-page {
-            display: none;
-            position: relative;
-            z-index: 1;
-            min-height: 100vh;
-            text-align: center;
-            padding: 60px 20px;
-        }
-        .gift-grid {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 25px;
-            max-width: 850px;
-            margin: 40px auto;
-        }
-        .gift-box {
-            font-size: 3.5em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.08);
-            padding: 25px;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        }
-        .gift-box:hover {
-            transform: scale(1.12) rotate(6deg);
-            background: rgba(255, 255, 255, 0.2);
-        }
-        .gift-box.opened {
-            opacity: 0.4;
-            pointer-events: none;
-            filter: grayscale(80%);
-        }
-
-        /* Modal Popup */
-        #note-modal {
-            display: none;
-            position: fixed;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            background: #ffffff;
-            color: #222;
-            padding: 35px;
-            border-radius: 24px;
-            z-index: 100;
-            max-width: 420px;
-            width: 85%;
-            text-align: center;
-            box-shadow: 0 25px 60px rgba(0,0,0,0.6);
-            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        @keyframes popIn {
-            0% { transform: translate(-50%, -50%) scale(0.6); opacity: 0; }
-            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-        }
-        .modal-bg {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            background: rgba(0,0,0,0.75);
-            backdrop-filter: blur(5px);
-            z-index: 99;
-        }
-
-        /* ================= PAGE 3: CARTOON CAKE ================= */
+        /* ================= SCENE SETUP ================= */
         #cake-page {
-            display: none;
-            position: relative;
-            z-index: 1;
-            min-height: 100vh;
-            text-align: center;
-            padding: 40px 20px;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; min-height: 100vh; padding: 20px;
+            position: relative; z-index: 1;
         }
 
-        /* Animated Floating Background Decorations */
-        .bg-decorations {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 0;
+        /* The 3D Table */
+        .table-container {
+            position: relative; width: 600px; height: 400px;
+            margin-top: 50px;
         }
-        .floating-balloon {
-            position: absolute;
-            font-size: 3em;
-            animation: floatUp 8s infinite linear;
-            opacity: 0.7;
-        }
-        @keyframes floatUp {
-            0% { transform: translateY(105vh) rotate(0deg); }
-            100% { transform: translateY(-15vh) rotate(360deg); }
-        }
-
-        /* Cake Scene Container */
-        .cake-wrapper {
-            position: relative;
-            width: 320px;
-            height: 320px;
-            margin: 30px auto;
-        }
-
-        /* Cute Kitties (Hidden inside cake initially) */
-        .kitties-container {
-            position: absolute;
-            top: 60px;
-            left: 50%;
-            transform: translateX(-50%) scale(0);
-            display: flex;
-            gap: 15px;
+        .table-surface {
+            position: absolute; bottom: 0; left: 50%;
+            transform: translateX(-50%);
+            width: 500px; height: 120px;
+            background: radial-gradient(ellipse at center, #4e342e 0%, #211512 100%);
+            border-radius: 50%;
+            box-shadow: 0 30px 50px rgba(0,0,0,0.8), inset 0 5px 10px rgba(255,255,255,0.1);
             z-index: 2;
-            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* Cake SVG & Shaking Animation */
+        .cake-wrapper {
+            position: absolute; bottom: 50px; left: 50%;
+            transform: translateX(-50%);
+            width: 300px; height: 350px;
+            z-index: 3;
+        }
+        .tremble {
+            animation: violentShake 0.1s infinite !important;
+        }
+        @keyframes violentShake {
+            0% { transform: translateX(-50%) translate(3px, 2px); }
+            25% { transform: translateX(-50%) translate(-3px, -2px); }
+            50% { transform: translateX(-50%) translate(4px, 0px); }
+            75% { transform: translateX(-50%) translate(-4px, 3px); }
+            100% { transform: translateX(-50%) translate(0px, -2px); }
+        }
+
+        /* Kitties (Hidden initially via Y transform) */
+        #kitties {
+            position: absolute; bottom: 60px; left: 50%;
+            transform: translate(-50%, 150px); /* Hidden deep inside cake */
+            display: flex; gap: 20px; z-index: 4;
+            transition: transform 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             opacity: 0;
         }
-        .kitties-container.pop-out {
-            transform: translateX(-50%) scale(1);
+        #kitties.rise-up {
+            transform: translate(-50%, 0);
             opacity: 1;
-            animation: kittyBounce 1.5s infinite ease-in-out alternate;
         }
-        @keyframes kittyBounce {
-            0% { transform: translateX(-50%) translateY(0) scale(1); }
-            100% { transform: translateX(-50%) translateY(-15px) scale(1.05); }
+        
+        /* Blinking Eyes */
+        .eye {
+            animation: blink 4s infinite;
+            transform-origin: center;
         }
-        .kitty-card {
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 50px;
-            padding: 10px 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            text-align: center;
-        }
-        .kitty-avatar {
-            font-size: 4em;
-            display: block;
-            line-height: 1;
-        }
-        .party-cap {
-            position: absolute;
-            top: -15px;
-            font-size: 1.8em;
+        @keyframes blink {
+            0%, 95%, 100% { transform: scaleY(1); }
+            97% { transform: scaleY(0.1); }
         }
 
-        /* SVG Cake Elements */
-        .svg-cake {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            z-index: 3;
-            transition: transform 0.6s ease;
-        }
-
-        /* Explosion Animations */
-        .svg-cake.exploded .cake-top {
-            animation: explodeTop 0.8s forwards ease-out;
-        }
-        .svg-cake.exploded .cake-bottom {
-            animation: explodeBottom 0.8s forwards ease-out;
-        }
-        .svg-cake.exploded .candle-flame {
-            display: none;
-        }
-        @keyframes explodeTop {
-            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(-140px) rotate(-25deg) scale(0.7); opacity: 0; }
-        }
-        @keyframes explodeBottom {
-            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(140px) rotate(25deg) scale(0.7); opacity: 0; }
-        }
-
-        /* Candle Flame Flickering Animation */
-        .candle-flame {
-            animation: flicker 0.6s infinite alternate ease-in-out;
-            transform-origin: center bottom;
-        }
-        @keyframes flicker {
-            0% { transform: scale(1) rotate(-3deg); opacity: 0.9; }
-            100% { transform: scale(1.2) rotate(3deg); opacity: 1; }
-        }
-
-        /* Canvas burst overlay */
-        #explosion-canvas {
-            position: absolute;
-            top: 0; left: 0;
+        /* Canvas for physics chunks */
+        #physics-canvas {
+            position: absolute; top: 0; left: 0;
             width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 5;
+            z-index: 15; pointer-events: none;
         }
     </style>
 </head>
 <body>
 
-    <div id="particle-container"></div>
-
-    <div class="bg-decorations" id="bg-decorations"></div>
-
-    <div id="main-page">
-        <section>
-            <div class="card">
-                <h1>🎉 Happy Birthday! 🎉</h1>
-                <p>Today is a day to celebrate someone truly special.</p>
-                <p style="font-size: 0.9em; color: #aaa; margin-top: 25px;">Scroll Down ↓</p>
-            </div>
-        </section>
-
-        <section>
-            <div class="card">
-                <h2>Wishing You The Best</h2>
-                <p>May your year ahead be full of endless laughter, dream-chasing, good health, and immaculate vibes!</p>
-            </div>
-        </section>
-
-        <section>
-            <div class="card">
-                <h2>Ready for Your Surprises? 🎁</h2>
-                <p>Click below to open your birthday gifts and unlock your wishes!</p>
-                <button class="btn" onclick="showPage('gift-page')">Open Gifts 🎁</button>
-                <button class="btn" style="background: linear-gradient(45deg, #7c4dff, #b388ff);" onclick="showPage('cake-page')">Let's Cut the Cake 🎂</button>
-            </div>
-        </section>
-    </div>
-
-    <div id="gift-page">
-        <div class="card" style="margin: 0 auto; max-width: 750px;">
-            <h2>Pick a Gift Box! 🎁</h2>
-            <p>Click each box to unlock a special birthday wish!</p>
-            
-            <div class="gift-grid" id="gifts-container"></div>
-
-            <button class="btn" style="background: linear-gradient(45deg, #00e676, #1de9b6); color: #004d40;" onclick="showPage('cake-page')">
-                Let's Cut the Cake 🎂 →
-            </button>
-        </div>
-    </div>
-
-    <div class="modal-bg" id="modal-bg"></div>
-    <div id="note-modal">
-        <h3 style="margin-top: 0; color: #ff4081; font-size: 1.6em;">✉️ Birthday Note</h3>
-        <p id="note-text" style="font-size: 1.15em; color: #444; font-weight: 500;"></p>
-        <button class="btn" style="padding: 10px 30px; font-size: 1em;" onclick="closeNote()">Awesome! ✨</button>
-    </div>
+    <!-- Ambient Decor -->
+    <div id="bg-decorations"></div>
+    <div class="banner" id="banner"></div>
 
     <div id="cake-page">
-        <div class="card" style="max-width: 650px; width: 100%;">
-            <h1 id="cake-title">Make a Wish! 🎂</h1>
-            <p id="cake-subtitle">Click the button below to cut the cake!</p>
+        <h1 style="z-index: 20; color: #ff9a9e; font-size: 3em; margin-bottom: 5px;">Make a Wish!</h1>
+        <p style="z-index: 20; color: #aaa; margin-bottom: 20px;">The candles are burning. Click to cut.</p>
+        
+        <button class="btn" id="cut-btn" onclick="startCinematicCut()">Cut the Cake 🔪</button>
 
-            <div class="cake-wrapper">
-                <canvas id="explosion-canvas"></canvas>
+        <div class="table-container">
+            <!-- Table Surface -->
+            <div class="table-surface"></div>
+            
+            <!-- Explosion Physics Canvas -->
+            <canvas id="physics-canvas"></canvas>
 
-                <div class="kitties-container" id="kitties">
-                    <div class="kitty-card">
-                        <span class="party-cap">🥳</span>
-                        <span class="kitty-avatar">🐱</span>
-                        <small style="color:#333; font-weight:bold;">Milo</small>
-                    </div>
-                    <div class="kitty-card">
-                        <span class="party-cap">🎉</span>
-                        <span class="kitty-avatar">😸</span>
-                        <small style="color:#333; font-weight:bold;">Otis</small>
-                    </div>
-                </div>
+            <div class="cake-wrapper" id="cake-wrapper">
+                
+                <!-- The Kitties (Layered behind the front crust) -->
+                <svg id="kitties" viewBox="0 0 200 100" width="200" height="100">
+                    <!-- Kitty 1 -->
+                    <g transform="translate(40, 50)">
+                        <!-- Body -->
+                        <path d="M-25,50 C-25,-10 25,-10 25,50" fill="#f4a261" />
+                        <!-- Head -->
+                        <circle cx="0" cy="0" r="25" fill="#f4a261" />
+                        <!-- Ears -->
+                        <polygon points="-15,-15 -25,-35 -5,-22" fill="#e76f51"/>
+                        <polygon points="15,-15 25,-35 5,-22" fill="#e76f51"/>
+                        <!-- Eyes -->
+                        <ellipse class="eye" cx="-10" cy="-5" rx="3" ry="5" fill="#222"/>
+                        <ellipse class="eye" cx="10" cy="-5" rx="3" ry="5" fill="#222"/>
+                        <!-- Nose/Mouth -->
+                        <circle cx="0" cy="5" r="2" fill="#e76f51"/>
+                        <!-- Paws holding the cake edge -->
+                        <circle cx="-18" cy="30" r="8" fill="#e76f51"/>
+                        <circle cx="18" cy="30" r="8" fill="#e76f51"/>
+                    </g>
+                    <!-- Kitty 2 -->
+                    <g transform="translate(160, 50)">
+                        <!-- Body -->
+                        <path d="M-25,50 C-25,-10 25,-10 25,50" fill="#e0e0e0" />
+                        <!-- Head -->
+                        <circle cx="0" cy="0" r="25" fill="#e0e0e0" />
+                        <!-- Ears -->
+                        <polygon points="-15,-15 -25,-35 -5,-22" fill="#b0bec5"/>
+                        <polygon points="15,-15 25,-35 5,-22" fill="#b0bec5"/>
+                        <!-- Eyes -->
+                        <ellipse class="eye" cx="-10" cy="-5" rx="3" ry="5" fill="#222"/>
+                        <ellipse class="eye" cx="10" cy="-5" rx="3" ry="5" fill="#222"/>
+                        <!-- Nose -->
+                        <circle cx="0" cy="5" r="2" fill="#ff80ab"/>
+                        <!-- Paws -->
+                        <circle cx="-18" cy="30" r="8" fill="#b0bec5"/>
+                        <circle cx="18" cy="30" r="8" fill="#b0bec5"/>
+                    </g>
+                </svg>
 
-                <svg class="svg-cake" id="cake-svg" viewBox="0 0 300 300">
-                    <g class="cake-top">
-                        <path class="candle-flame" d="M150,40 Q145,25 150,15 Q155,25 150,40 Z" fill="#ffea00" />
-                        <path class="candle-flame" d="M150,35 Q147,28 150,20 Q153,28 150,35 Z" fill="#ff6d00" />
-                        <rect x="146" y="40" width="8" height="35" rx="3" fill="#ff4081" />
-                        <rect x="146" y="45" width="8" height="5" fill="#ffffff" opacity="0.6" />
-                        <rect x="146" y="58" width="8" height="5" fill="#ffffff" opacity="0.6" />
-                        
-                        <path d="M70,130 C70,105 230,105 230,130 L230,165 C230,180 70,180 70,165 Z" fill="#ff80ab" />
-                        <path d="M70,130 Q85,150 100,135 Q115,155 130,135 Q145,155 160,135 Q175,155 190,135 Q205,155 220,135 Q230,145 230,130 C230,105 70,105 70,130 Z" fill="#ffffff" />
-                        <circle cx="100" cy="120" r="4" fill="#ffeb3b" />
-                        <circle cx="140" cy="118" r="4" fill="#00e676" />
-                        <circle cx="180" cy="122" r="4" fill="#00b0ff" />
+                <!-- The Cake Structure -->
+                <svg viewBox="0 0 300 350" width="100%" height="100%">
+                    <!-- BOTTOM LAYER (Stays intact) -->
+                    <g id="cake-bottom" transform="translate(0, 50)" style="z-index: 5; position: relative;">
+                        <!-- Back inside wall of bottom layer (gives 3D depth when top blows off) -->
+                        <ellipse cx="150" cy="180" rx="110" ry="30" fill="#883b4d" />
+                        <!-- Front crust -->
+                        <path d="M40,180 C40,180 40,240 40,240 C40,260 260,260 260,240 C260,240 260,180 260,180 C260,200 40,200 40,180 Z" fill="#ba68c8" />
+                        <path d="M40,180 C40,160 260,160 260,180 C260,200 40,200 40,180 Z" fill="#ab47bc" opacity="0.4"/>
                     </g>
 
-                    <g class="cake-bottom">
-                        <path d="M50,165 C50,140 250,140 250,165 L250,225 C250,250 50,250 50,225 Z" fill="#ba68c8" />
-                        <path d="M50,165 Q70,185 90,170 Q110,190 130,170 Q150,190 170,170 Q190,190 210,170 Q230,190 250,165 C250,140 50,140 50,165 Z" fill="#f3e5f5" />
-                        <ellipse cx="150" cy="235" rx="120" ry="18" fill="#e0e0e0" opacity="0.5" />
+                    <!-- TOP LAYERS (These will vanish instantly on explosion) -->
+                    <g id="cake-top-half" transform="translate(0, 50)">
+                        <!-- Top Cake Tier -->
+                        <path d="M70,110 C70,90 230,90 230,110 L230,170 C230,190 70,190 70,170 Z" fill="#ff80ab" />
+                        <!-- Frosting Drips -->
+                        <path d="M70,110 Q85,130 100,115 Q115,135 130,115 Q145,135 160,115 Q175,135 190,115 Q205,135 220,115 Q230,125 230,110 C230,90 70,90 70,110 Z" fill="#ffffff" />
+                        
+                        <!-- Auto-generated Candles will go here -->
+                        <g id="candles-group"></g>
                     </g>
                 </svg>
             </div>
-
-            <button class="btn" id="cut-btn" onclick="cutCake()">Cut the Cake 🔪🎂</button>
         </div>
     </div>
 
     <script>
-        // ================= BACKGROUND PARTICLES =================
-        const particleContainer = document.getElementById('particle-container');
-        const particlesArray = [];
-        for (let i = 0; i < 50; i++) {
-            let p = document.createElement('div');
-            p.className = 'particle';
-            let size = Math.random() * 8 + 4;
-            p.style.width = `${size}px`;
-            p.style.height = `${size}px`;
-            p.style.left = `${Math.random() * 100}vw`;
-            p.style.top = `${Math.random() * 100}vh`;
-            p.style.animationDelay = `${Math.random() * 5}s`;
-            let speed = (Math.random() * 0.6) - 0.3;
-            particlesArray.push({ element: p, speed: speed });
-            particleContainer.appendChild(p);
-        }
-
-        window.addEventListener('scroll', () => {
-            let scrollY = window.scrollY;
-            particlesArray.forEach(p => {
-                p.element.style.transform = `translateY(${scrollY * p.speed}px)`;
-            });
-        });
-
-        // ================= FLOATING BALLOONS DECORATION =================
+        // --- 1. Background Setup ---
         const bgDeco = document.getElementById('bg-decorations');
-        const balloonEmojis = ['🎈', '✨', '⭐', '🎉', '🌟'];
-        for (let i = 0; i < 15; i++) {
+        const balloonColors = ['🎈', '✨', '🎈', '🎉'];
+        for (let i = 0; i < 12; i++) {
             let b = document.createElement('div');
-            b.className = 'floating-balloon';
-            b.innerText = balloonEmojis[Math.floor(Math.random() * balloonEmojis.length)];
+            b.className = 'balloon';
+            b.innerText = balloonColors[Math.floor(Math.random() * balloonColors.length)];
             b.style.left = `${Math.random() * 95}vw`;
-            b.style.animationDuration = `${6 + Math.random() * 6}s`;
+            b.style.animationDuration = `${5 + Math.random() * 5}s`;
             b.style.animationDelay = `${Math.random() * 5}s`;
             bgDeco.appendChild(b);
         }
 
-        // ================= PAGE NAVIGATION =================
-        function showPage(pageId) {
-            document.getElementById('main-page').style.display = 'none';
-            document.getElementById('gift-page').style.display = 'none';
-            document.getElementById('cake-page').style.display = 'none';
-
-            let target = document.getElementById(pageId);
-            if (pageId === 'cake-page') {
-                target.style.display = 'flex';
-            } else {
-                target.style.display = 'block';
-            }
-            window.scrollTo(0, 0);
+        const banner = document.getElementById('banner');
+        for(let i = 0; i < 15; i++) {
+            let flag = document.createElement('div');
+            flag.className = 'flag';
+            banner.appendChild(flag);
         }
 
-        // ================= GIFT BOXES & TEEN NOTES =================
-        const teenNotes = [
-            "Happy Birthday! May your Wi-Fi be strong and your phone battery never die today. 📱✨",
-            "Welcome to another year of surviving school! You're doing amazing. Have a blast! 🎒🎉",
-            "Another year older, but still not old enough to pay the bills! Enjoy the free ride. 💸😎",
-            "Happy Birthday! Sleep in, eat junk food, and blame it on growing! 🍕💤",
-            "May your skin stay clear and your vibes stay immaculate all year long. ✨💅",
-            "Wishing you awesome music, great friends, and absolutely zero homework today! 🎧🚫📚",
-            "Here is to being a teenager! You're officially at the age where you know everything. 🙌🧠",
-            "Happy Birthday! Have a fantastic day, make crazy memories, and enjoy every second! 🎢😜"
-        ];
-
-        const giftContainer = document.getElementById('gifts-container');
-        teenNotes.forEach((note) => {
-            let box = document.createElement('div');
-            box.className = 'gift-box';
-            box.innerHTML = '🎁';
-            box.onclick = () => openGift(box, note);
-            giftContainer.appendChild(box);
-        });
-
-        function openGift(boxElement, noteMessage) {
-            document.getElementById('note-text').innerText = noteMessage;
-            document.getElementById('note-modal').style.display = 'block';
-            document.getElementById('modal-bg').style.display = 'block';
-            boxElement.classList.add('opened');
-            boxElement.innerHTML = '🎉';
+        // --- 2. Lots of Candles ---
+        const candleGroup = document.getElementById('candles-group');
+        for(let i = 0; i < 12; i++) {
+            // Distribute candles along an arc to look 3D
+            let x = 80 + (i * 12.5);
+            let y = 100 + Math.sin(i * 0.6) * 15; 
+            
+            candleGroup.innerHTML += `
+                <g transform="translate(${x}, ${y})">
+                    <rect x="-4" y="-20" width="8" height="20" rx="2" fill="#00e676" />
+                    <!-- Flickering Flame -->
+                    <g>
+                        <animateTransform attributeName="transform" type="scale" values="1 1; 1.3 1.3; 1 1" dur="${0.1 + Math.random()*0.2}s" repeatCount="indefinite" />
+                        <path d="M0,-22 Q-4,-30 0,-35 Q4,-30 0,-22 Z" fill="#ffea00" />
+                        <path d="M0,-24 Q-2,-28 0,-32 Q2,-28 0,-24 Z" fill="#ff6d00" />
+                    </g>
+                </g>
+            `;
         }
 
-        function closeNote() {
-            document.getElementById('note-modal').style.display = 'none';
-            document.getElementById('modal-bg').style.display = 'none';
-        }
-
-        // ================= CAKE CUTTING & EXPLOSION =================
-        let cakeCut = false;
-        function cutCake() {
-            if (cakeCut) return;
-            cakeCut = true;
-
-            // Trigger Cake Explosion
-            document.getElementById('cake-svg').classList.add('exploded');
-            document.getElementById('kitties').classList.add('pop-out');
-            document.getElementById('cake-title').innerText = "🎉 SURPRISE! 🎉";
-            document.getElementById('cake-subtitle').innerText = "Milo & Otis popped out to wish you Happy Birthday!";
+        // --- 3. Cinematic Cut Sequence ---
+        let isCut = false;
+        function startCinematicCut() {
+            if (isCut) return;
+            isCut = true;
             document.getElementById('cut-btn').style.display = 'none';
 
-            // Launch Confetti Particle Burst
-            triggerCanvasExplosion();
+            const wrapper = document.getElementById('cake-wrapper');
+            const topHalf = document.getElementById('cake-top-half');
+            const kitties = document.getElementById('kitties');
 
-            // Play Synth Birthday Audio
-            playBirthdayMusic();
+            // 1. Violent Tremble (Oggy style)
+            wrapper.classList.add('tremble');
+
+            // 2. Wait 1.5 seconds, then EXPLODE
+            setTimeout(() => {
+                wrapper.classList.remove('tremble');
+                
+                // Hide the top half immediately
+                topHalf.style.display = 'none';
+
+                // Trigger Physics Engine (falling cake chunks)
+                triggerPhysicsExplosion();
+
+                // 3. Kitties rise up from inside the bottom layer
+                setTimeout(() => {
+                    kitties.classList.add('rise-up');
+                    playSynthMusic();
+                }, 300); // slight delay after explosion
+
+            }, 1500);
         }
 
-        // Particle explosion on Canvas
-        function triggerCanvasExplosion() {
-            const canvas = document.getElementById('explosion-canvas');
+        // --- 4. Canvas Physics Engine (Cake Chunks) ---
+        function triggerPhysicsExplosion() {
+            const canvas = document.getElementById('physics-canvas');
             const ctx = canvas.getContext('2d');
             canvas.width = canvas.parentElement.clientWidth;
             canvas.height = canvas.parentElement.clientHeight;
 
-            const particles = [];
-            const colors = ['#ff4081', '#ffeb3b', '#00e676', '#00b0ff', '#e040fb'];
+            const chunks = [];
+            const colors = ['#ff80ab', '#ffffff', '#ba68c8', '#ab47bc', '#ffea00'];
 
-            for (let i = 0; i < 90; i++) {
-                particles.push({
-                    x: canvas.width / 2,
-                    y: canvas.height / 2,
-                    vx: (Math.random() - 0.5) * 14,
-                    vy: (Math.random() - 0.5) * 14,
-                    radius: Math.random() * 6 + 3,
+            // Create 80 chunks of cake
+            for (let i = 0; i < 80; i++) {
+                chunks.push({
+                    x: canvas.width / 2, // Start in middle of cake
+                    y: canvas.height / 2 - 50,
+                    vx: (Math.random() - 0.5) * 20, // Explosive outward force
+                    vy: (Math.random() - 0.5) * 15 - 10, // Upward arc
+                    size: Math.random() * 10 + 4,
                     color: colors[Math.floor(Math.random() * colors.length)],
-                    alpha: 1
+                    rotation: Math.random() * 360,
+                    rotationSpeed: (Math.random() - 0.5) * 20
                 });
             }
 
-            function animateCanvas() {
+            const tableY = canvas.height - 40; // The virtual floor (table)
+
+            function animateChunks() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                let alive = false;
-                particles.forEach(p => {
+                let isMoving = false;
+
+                chunks.forEach(p => {
+                    // Apply Gravity
+                    p.vy += 0.8; 
+                    
+                    // Move
                     p.x += p.vx;
                     p.y += p.vy;
-                    p.vy += 0.15; // Gravity
-                    p.alpha -= 0.012;
+                    p.rotation += p.rotationSpeed;
 
-                    if (p.alpha > 0) {
-                        alive = true;
-                        ctx.save();
-                        ctx.globalAlpha = p.alpha;
-                        ctx.beginPath();
-                        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                        ctx.fillStyle = p.color;
-                        ctx.fill();
-                        ctx.restore();
+                    // Table Collision (Bounce & Friction)
+                    if (p.y > tableY) {
+                        p.y = tableY;
+                        p.vy *= -0.4; // Lose energy on bounce
+                        p.vx *= 0.6; // Friction slows horizontal movement
+                        p.rotationSpeed *= 0.5;
                     }
+
+                    // Keep rendering if things are still moving
+                    if (Math.abs(p.vx) > 0.1 || Math.abs(p.vy) > 0.1) {
+                        isMoving = true;
+                    }
+
+                    // Draw Chunk
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate(p.rotation * Math.PI / 180);
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size);
+                    ctx.restore();
                 });
-                if (alive) requestAnimationFrame(animateCanvas);
+
+                if (isMoving) {
+                    requestAnimationFrame(animateChunks);
+                }
             }
-            animateCanvas();
+            animateChunks();
         }
 
-        // ================= WEB AUDIO SYNTHESIZER (BIRTHDAY SONG) =================
-        function playBirthdayMusic() {
+        // --- 5. Sound ---
+        function playSynthMusic() {
             const AudioContext = window.AudioContext || window.webkitAudioContext;
             if (!AudioContext) return;
             const ctx = new AudioContext();
-
-            // Happy Birthday melody notes (frequency & duration)
-            const notes = [
-                { f: 264, d: 0.35 }, { f: 264, d: 0.35 }, { f: 297, d: 0.7 }, { f: 264, d: 0.7 }, { f: 352, d: 0.7 }, { f: 330, d: 1.2 },
-                { f: 264, d: 0.35 }, { f: 264, d: 0.35 }, { f: 297, d: 0.7 }, { f: 264, d: 0.7 }, { f: 396, d: 0.7 }, { f: 352, d: 1.2 },
-                { f: 264, d: 0.35 }, { f: 264, d: 0.35 }, { f: 528, d: 0.7 }, { f: 440, d: 0.7 }, { f: 352, d: 0.7 }, { f: 330, d: 0.7 }, { f: 297, d: 0.7 },
-                { f: 466, d: 0.35 }, { f: 466, d: 0.35 }, { f: 440, d: 0.7 }, { f: 352, d: 0.7 }, { f: 396, d: 0.7 }, { f: 352, d: 1.4 }
-            ];
-
-            let time = ctx.currentTime + 0.1;
-            notes.forEach(note => {
+            // A simple festive chord progression
+            [264, 330, 396].forEach((freq, index) => {
                 const osc = ctx.createOscillator();
                 const gain = ctx.createGain();
-
-                osc.type = 'triangle'; // Warm festive tone
-                osc.frequency.setValueAtTime(note.f, time);
-
-                gain.gain.setValueAtTime(0.15, time);
-                gain.gain.exponentialRampToValueAtTime(0.0001, time + note.d - 0.05);
-
+                osc.frequency.value = freq;
+                osc.type = 'sine';
+                gain.gain.setValueAtTime(0, ctx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.2, ctx.currentTime + 0.1 + (index*0.1));
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 3);
                 osc.connect(gain);
                 gain.connect(ctx.destination);
-
-                osc.start(time);
-                osc.stop(time + note.d);
-
-                time += note.d;
+                osc.start(); osc.stop(ctx.currentTime + 3);
             });
         }
     </script>
