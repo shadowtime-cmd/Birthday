@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinematic Birthday</title>
+    
+    <!-- This links to your design engine -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- ================= PAGE 1: GREETINGS ================= -->
+    <!-- Notice the inline style 'display: flex' so this is the only page visible first -->
+    <div id="page-1" class="page" style="display: flex;">
+        <h1>🎉 Happy Birthday! 🎉</h1>
+        <p>Wishing you the absolute best today.</p>
+        <button class="btn" onclick="nav('page-2')">Open Gifts 🎁</button>
+    </div>
+
+    <!-- ================= PAGE 2: GIFTS ================= -->
+    <div id="page-2" class="page">
+        <h2>Pick a Gift Box!</h2>
+        
+        <!-- We create the 8 gift boxes here -->
+        <div class="gift-grid" id="gifts-container">
+            <div class="gift-box" onclick="openGift(this)">🎁</div>
+            <div class="gift-box" onclick="openGift(this)">🎁</div>
+            <div class="gift-box" onclick="openGift(this)">🎁</div>
+            <div class="gift-box" onclick="openGift(this)">🎁</div>
+            <div class="gift-box" onclick="openGift(this)">🎁</div>
+            <div class="gift-box" onclick="openGift(this)">🎁</div>
+            <div class="gift-box" onclick="openGift(this)">🎁</div>
+            <div class="gift-box" onclick="openGift(this)">🎁</div>
+        </div>
+        
+        <button class="btn" onclick="nav('page-3')">Let's Cut the Cake 🎂</button>
+    </div>
+
+    <!-- ================= PAGE 3: CINEMATIC CAKE ================= -->
+    <div id="page-3" class="page">
+        <h1 id="cake-title">Make a Wish!</h1>
+        <button class="btn" id="cut-btn" onclick="startCinematicCut()">Cut the Cake 🔪</button>
+
+        <div class="table-container">
+            <!-- 3D Table Surface -->
+            <div class="table-surface"></div>
+            
+            <!-- Physics Engine Canvas (Where the cake chunks will fall) -->
+            <canvas id="physics-canvas"></canvas>
+
+            <div class="cake-wrapper" id="cake-wrapper">
+                
+                <!-- Real Kittens (Pulling high-res images directly from Unsplash) -->
+                <div id="kitties">
+                    <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=200&q=80" class="real-kitty" alt="Kitten 1">
+                    <img src="https://images.unsplash.com/photo-1573865526739-10659fec78a5?auto=format&fit=crop&w=200&q=80" class="real-kitty" alt="Kitten 2">
+                </div>
+
+                <!-- Cake Structure -->
+                <svg viewBox="0 0 300 350" width="100%" height="100%">
+                    
+                    <!-- Bottom Layer (Stays intact on the table) -->
+                    <g id="cake-bottom" transform="translate(0, 50)" style="z-index: 5; position: relative;">
+                        <!-- Dark inside rim to give it 3D depth when the top blows off -->
+                        <ellipse cx="150" cy="180" rx="110" ry="30" fill="#2d131a" />
+                        <!-- Outer crust -->
+                        <path d="M40,180 C40,180 40,240 40,240 C40,260 260,260 260,240 C260,240 260,180 260,180 C260,200 40,200 40,180 Z" fill="#8d6e63" />
+                    </g>
+                    
+                    <!-- Top Layer (This group will vanish when the physics engine triggers) -->
+                    <g id="cake-top-half" transform="translate(0, 50)">
+                        <path d="M70,110 C70,90 230,90 230,110 L230,170 C230,190 70,190 70,170 Z" fill="#ff4081" />
+                        <path d="M70,110 Q85,130 100,115 Q115,135 130,115 Q145,135 160,115 Q175,135 190,115 Q205,135 220,115 Q230,125 230,110 C230,90 70,90 70,110 Z" fill="#fff" />
+                    </g>
+
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= JAVASCRIPT LINKS ================= -->
+    <!-- These scripts pull in the interactivity and mathematics -->
+    <script src="ui-actions.js"></script>
+    <script src="physics-engine.js"></script>
+
+</body>
+</html>
