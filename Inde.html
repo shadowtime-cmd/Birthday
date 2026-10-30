@@ -1,0 +1,296 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>I'm Sorry ❤️</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(-45deg,
+        #160020, #650044, #a52b68, #25104d);
+    background-size: 400% 400%;
+    animation: gradient 12s ease infinite;
+    color: white;
+}
+
+@keyframes gradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.glow {
+    position: absolute;
+    width: 280px;
+    height: 280px;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: .5;
+    animation: glowMove 9s infinite alternate ease-in-out;
+    pointer-events: none;
+}
+
+.glow.one {
+    background: #ff2685;
+    top: -80px;
+    left: -80px;
+}
+
+.glow.two {
+    background: #873dff;
+    bottom: -80px;
+    right: -80px;
+    animation-delay: 2s;
+}
+
+@keyframes glowMove {
+    to { transform: translate(100px, 100px) scale(1.4); }
+}
+
+.particles {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.particle {
+    position: absolute;
+    bottom: -40px;
+    animation: floatUp linear infinite;
+    opacity: 0;
+    color: #ffd1e5;
+    text-shadow: 0 0 12px #ff80bd;
+}
+
+@keyframes floatUp {
+    0% {
+        transform: translateY(0) rotate(0deg) scale(.6);
+        opacity: 0;
+    }
+    15% { opacity: .8; }
+    85% { opacity: .6; }
+    100% {
+        transform: translateY(-110vh) rotate(360deg) scale(1.3);
+        opacity: 0;
+    }
+}
+
+.card {
+    position: relative;
+    z-index: 2;
+    width: 90%;
+    max-width: 420px;
+    padding: 45px 25px;
+    text-align: center;
+    background: rgba(255,255,255,.10);
+    border: 1px solid rgba(255,255,255,.22);
+    border-radius: 30px;
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    box-shadow: 0 15px 60px rgba(0,0,0,.3),
+                0 0 35px rgba(255,70,150,.12);
+    animation: cardEnter 1.2s ease;
+}
+
+@keyframes cardEnter {
+    from { opacity: 0; transform: translateY(50px) scale(.9); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.heart {
+    font-size: 65px;
+    display: inline-block;
+    animation: heartbeat 1.5s infinite;
+    filter: drop-shadow(0 0 15px #ff4b91);
+}
+
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    15% { transform: scale(1.2); }
+    30% { transform: scale(1); }
+    45% { transform: scale(1.15); }
+}
+
+h1 {
+    margin: 20px 0;
+    font-size: clamp(32px, 8vw, 43px);
+    color: #ffd0e4;
+    text-shadow: 0 0 20px #ff4b91;
+}
+
+.subtitle {
+    color: #ffe4ef;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+#question, #answer {
+    display: none;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-top: 35px;
+    min-height: 60px;
+}
+
+button {
+    border: none;
+    padding: 14px 19px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform .2s, box-shadow .2s;
+    touch-action: manipulation;
+    white-space: nowrap;
+}
+
+#yes {
+    color: white;
+    background: linear-gradient(135deg, #ff438b, #ff70ac);
+    box-shadow: 0 5px 25px rgba(255,50,130,.4);
+}
+
+#yes:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 25px #ff438b;
+}
+
+#no {
+    color: #a00050;
+    background: #fff0f7;
+    position: relative;
+    z-index: 5;
+}
+
+#answer h1 {
+    animation: answerPop .8s ease;
+}
+
+@keyframes answerPop {
+    from { transform: scale(.5); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+#answer .heart {
+    animation: heartbeat 1s infinite;
+}
+
+@media(max-width: 360px) {
+    .buttons { gap: 8px; }
+    button { padding: 13px 12px; font-size: 12px; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="glow one"></div>
+<div class="glow two"></div>
+<div class="particles" id="particles"></div>
+
+<div class="card">
+
+    <div id="sorry">
+        <div class="heart">❤️</div>
+        <h1>Sorry...</h1>
+        <p class="subtitle">🥺</p>
+    </div>
+
+    <div id="question">
+        <div class="heart">🥺</div>
+        <h1>Did you forgive me?</h1>
+        <p class="subtitle">Please choose wisely 💗</p>
+
+        <div class="buttons">
+            <button id="yes" onclick="forgive()">
+                I Forgive You ❤️
+            </button>
+            <button id="no">
+                I Don't 💔
+            </button>
+        </div>
+    </div>
+
+    <div id="answer">
+        <div class="heart">💖</div>
+        <h1 id="result">Yayyy!</h1>
+        <p class="subtitle">You just made my day! 🥹</p>
+    </div>
+
+</div>
+
+<script>
+const noBtn = document.getElementById("no");
+
+setTimeout(() => {
+    document.getElementById("sorry").style.display = "none";
+    document.getElementById("question").style.display = "block";
+}, 2500);
+
+function forgive() {
+    document.getElementById("question").style.display = "none";
+    document.getElementById("answer").style.display = "block";
+}
+
+function runAway() {
+    const padding = 12;
+    const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+    const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+
+    noBtn.style.position = "fixed";
+    noBtn.style.left = Math.max(padding,
+        Math.random() * maxX) + "px";
+    noBtn.style.top = Math.max(padding,
+        Math.random() * maxY) + "px";
+}
+
+noBtn.addEventListener("pointerenter", runAway);
+noBtn.addEventListener("touchstart", (e) => {
+    e.preventDefault();
+    runAway();
+}, { passive: false });
+
+noBtn.addEventListener("click", runAway);
+
+// Floating hearts and sparkles
+const particles = document.getElementById("particles");
+const symbols = ["♡", "♥", "✨", "💗", "✧"];
+
+function createParticle() {
+    const p = document.createElement("span");
+    p.className = "particle";
+    p.innerHTML = symbols[Math.floor(Math.random() * symbols.length)];
+    p.style.left = Math.random() * 100 + "vw";
+    p.style.fontSize = (15 + Math.random() * 25) + "px";
+    p.style.animationDuration = (5 + Math.random() * 6) + "s";
+
+    particles.appendChild(p);
+    setTimeout(() => p.remove(), 11000);
+}
+
+setInterval(createParticle, 350);
+</script>
+
+</body>
+</html>
